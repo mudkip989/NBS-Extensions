@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "nbs_extensions",
+  "version": "${version}",
+  "name": "NBS Extensions",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/nbs_extensions/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "us.mudkip989.mods.nbs_extensions.client.Nbs_extensionsClient"
+    ],
+    "main": [
+      "us.mudkip989.mods.nbs_extensions.Nbs_extensions"
+    ]
+  },
+  "mixins": [
+    "nbs_extensions.mixins.json",
+    {
+      "config": "nbs_extensions.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
