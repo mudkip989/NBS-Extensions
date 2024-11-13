@@ -1,5 +1,6 @@
 package us.mudkip989.mods.nbs_extensions.client.nbs;
 
+import net.minecraft.component.*;
 import net.minecraft.item.*;
 import net.minecraft.text.*;
 import us.mudkip989.mods.nbs_extensions.client.nbs.alt.*;
@@ -25,9 +26,9 @@ public class NBSLoad {
                     } else {
                         name = d.getFileName();
                     }
-                    stack.setCustomName(Text.literal("§5SONG§7 -§f " + name));
+                    stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal("§5SONG§7 -§f " + name));
                 } else {
-                    stack.setCustomName(Text.literal("§5SONG§7 -§f " + d.getName()));
+                    stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal("§5SONG§7 -§f " + d.getName()));
                 }
 
 //                ToasterUtil.sendToaster("NBS Loaded!", fileName, SystemToast.SystemToastId.NARRATOR_TOGGLE);
@@ -55,9 +56,9 @@ public class NBSLoad {
                     } else {
                         name = d.getFileName();
                     }
-                    stack.setCustomName(Text.literal("§5SONG§7 -§f " + name));
+                    stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal("§5SONG§7 -§f " + name));
                 } else {
-                    stack.setCustomName(Text.literal("§5SONG§7 -§f " + d.getName()));
+                    stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal("§5SONG§7 -§f " + d.getName()));
                 }
 
 //                ToasterUtil.sendToaster("NBS Loaded!", fileName, SystemToast.SystemToastId.NARRATOR_TOGGLE);

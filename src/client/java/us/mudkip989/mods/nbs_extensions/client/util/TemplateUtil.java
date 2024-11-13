@@ -2,6 +2,8 @@ package us.mudkip989.mods.nbs_extensions.client.util;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.minecraft.component.*;
+import net.minecraft.component.type.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
 import net.minecraft.item.ItemStack;
@@ -22,6 +24,7 @@ public class TemplateUtil {
         NbtCompound itemNBT = new NbtCompound();
         NbtCompound codeNBT = new NbtCompound();
 
+
         codeNBT.putString("name", name.getString());
         codeNBT.putString("author", author);
         codeNBT.putString("code", codeData);
@@ -32,8 +35,12 @@ public class TemplateUtil {
 
         // Assign the bukkit container to the item. (Contains the template data)
         itemNBT.put("PublicBukkitValues", publicBukkitNBT);
-        stack.setNbt(itemNBT);
-        stack.setCustomName(name);
+        stack.set(DataComponentTypes.CUSTOM_DATA, NbtComponent.of(itemNBT));
+        stack.set(DataComponentTypes.CUSTOM_NAME, name);
+
+//        stack.set(itemNBT);
+//        stack.setCustomName(name);
+
     }
 
 
@@ -48,28 +55,28 @@ public class TemplateUtil {
 
     }
 
-    public static JsonObject read(ItemStack stack) {
-        NbtCompound tag = stack.getNbt();
-        NbtCompound publicBukkitNBT = tag.getCompound("PublicBukkitValues");
-        String template = publicBukkitNBT.getString("hypercube:codetemplatedata");
-        return JsonParser.parseString(template).getAsJsonObject();
-    }
+//    public static JsonObject read(ItemStack stack) {
+//        NbtCompound tag = stack.getNbt();
+//        NbtCompound publicBukkitNBT = tag.getCompound("PublicBukkitValues");
+//        String template = publicBukkitNBT.getString("hypercube:codetemplatedata");
+//        return JsonParser.parseString(template).getAsJsonObject();
+//    }
 
-    public static boolean isTemplate(ItemStack stack) {
-        if (stack == null || stack.isEmpty()) {
-            return false;
-        }
-
-        NbtCompound tag = stack.getNbt();
-        if (tag == null) {
-            return false;
-        }
-
-        NbtCompound publicBukkitNBT = tag.getCompound("PublicBukkitValues");
-        if (publicBukkitNBT == null) {
-            return false;
-        }
-
-        return publicBukkitNBT.getString("hypercube:codetemplatedata").length() > 0;
-    }
+//    public static boolean isTemplate(ItemStack stack) {
+//        if (stack == null || stack.isEmpty()) {
+//            return false;
+//        }
+//
+//        NbtCompound tag = stack.getNbt();
+//        if (tag == null) {
+//            return false;
+//        }
+//
+//        NbtCompound publicBukkitNBT = tag.getCompound("PublicBukkitValues");
+//        if (publicBukkitNBT == null) {
+//            return false;
+//        }
+//
+//        return publicBukkitNBT.getString("hypercube:codetemplatedata").length() > 0;
+//    }
 }
