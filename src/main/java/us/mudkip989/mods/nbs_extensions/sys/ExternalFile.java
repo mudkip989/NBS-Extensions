@@ -1,4 +1,4 @@
-package us.mudkip989.mods.nbs_extensions.client.sys;
+package us.mudkip989.mods.nbs_extensions.sys;
 
 import java.nio.file.Path;
 
@@ -6,12 +6,7 @@ public enum ExternalFile {
     NBS_FILES(builder()
             .isDirectory(true)
             .setName("NBS Files")
-            .build()),
-    IMAGE_FILES(builder()
-            .isDirectory(true)
-            .setName("Images")
-            .build()),
-    TEMPLATE_DB(ExternalFileBuilder.nbt("Templates.nbt"));
+            .build());
 
     private final Path path;
 
@@ -19,11 +14,11 @@ public enum ExternalFile {
         this.path = path;
     }
 
-    public Path getPath() {
-        return path;
-    }
-
     public static ExternalFileBuilder builder() {
         return new ExternalFileBuilder();
+    }
+
+    public Path getPath() {
+        return path;
     }
 }

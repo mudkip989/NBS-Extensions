@@ -1,4 +1,4 @@
-package us.mudkip989.mods.nbs_extensions.client.util;
+package us.mudkip989.mods.nbs_extensions.util;
 
 import com.mojang.brigadier.StringReader;
 

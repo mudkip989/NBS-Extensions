@@ -1,30 +1,17 @@
-package us.mudkip989.mods.nbs_extensions.client.util;
+package us.mudkip989.mods.nbs_extensions.util;
 
-import com.google.gson.JsonParser;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import net.minecraft.client.*;
-import net.minecraft.item.*;
-import net.minecraft.util.collection.*;
-//import net.minecraft.client.Minecraft;
-//import net.minecraft.core.NonNullList;
-//import net.minecraft.core.registries.BuiltInRegistries;
-//import net.minecraft.nbt.*;
-//import net.minecraft.network.chat.Component;
-//import net.minecraft.resources.ResourceLocation;
-//import net.minecraft.world.inventory.ClickType;
-//import net.minecraft.world.item.ItemStack;
-//import net.minecraft.world.item.Items;
-
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.util.collection.DefaultedList;
+import us.mudkip989.mods.nbs_extensions.NBSExtensions;
 
 public class ItemUtil {
     public static void giveCreativeItem(ItemStack item, boolean preferHand) {
-        MinecraftClient mc = MinecraftClient.getInstance();
+        MinecraftClient mc = NBSExtensions.MC;
+        if (mc.player == null || mc.interactionManager == null) return;
         DefaultedList<ItemStack> inv = mc.player.getInventory().main;
+
 
         if (preferHand) {
             if (mc.player.getMainHandStack().isEmpty()) {

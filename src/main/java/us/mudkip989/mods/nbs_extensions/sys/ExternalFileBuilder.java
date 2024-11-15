@@ -1,8 +1,7 @@
-package us.mudkip989.mods.nbs_extensions.client.sys;
+package us.mudkip989.mods.nbs_extensions.sys;
 
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.nbt.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -55,10 +54,6 @@ public class ExternalFileBuilder {
         return path;
     }
 
-    public Path buildRaw() throws IOException {
-        return buildRaw(null);
-    }
-
     public Path build(@Nullable Consumer<Path> init) {
         try {
             return buildRaw(init);
@@ -69,18 +64,5 @@ public class ExternalFileBuilder {
 
     public Path build() {
         return build(null);
-    }
-
-    static Path nbt(String name) {
-        return new ExternalFileBuilder()
-                .isDirectory(false)
-                .setName(name)
-                .build(path -> {
-                    try {
-                        NbtIo.write(new NbtCompound(), path);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
     }
 }

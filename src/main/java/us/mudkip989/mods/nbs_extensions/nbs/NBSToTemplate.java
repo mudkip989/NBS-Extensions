@@ -1,4 +1,4 @@
-package us.mudkip989.mods.nbs_extensions.client.nbs;
+package us.mudkip989.mods.nbs_extensions.nbs;
 
 import java.math.BigDecimal;
 
@@ -24,17 +24,17 @@ public class NBSToTemplate {
 
         this.version = "v" + SONG_PARSER_VERSION + "-nbs" + SONG_NBS_FORMAT_VERSION;
 
-        this.song = song.getNotes();
-        this.author = song.getAuthor();
-        this.name = song.getName();
-        this.filename = song.getFileName();
-        this.layers = song.getLayers();
-        this.length = song.getLength();
-        this.speed = song.getSpeed();
-        this.loopTick = song.getLoopTick();
-        this.loopCount = song.getLoopCount();
-        this.customInstrumentCount = song.getCustomInstrumentCount();
-        this.customInstrumentNames = song.getCustomInstrumentNames();
+        this.song = song.notes();
+        this.author = song.author();
+        this.name = song.name();
+        this.filename = song.fileName();
+        this.layers = song.layers();
+        this.length = song.length();
+        this.speed = song.speed();
+        this.loopTick = song.loopTick();
+        this.loopCount = song.loopCount();
+        this.customInstrumentCount = song.customInstrumentCount();
+        this.customInstrumentNames = song.customInstrumentNames();
     }
 
     public String convert() {
@@ -45,14 +45,14 @@ public class NBSToTemplate {
         StringBuilder instList = new StringBuilder();
 
         String songTempo = new BigDecimal(this.speed).stripTrailingZeros().toPlainString();
-        if (name.length() == 0) {
+        if (name.isEmpty()) {
             if (filename.indexOf(".") > 0) {
                 name = filename.substring(0, filename.lastIndexOf("."));
             } else {
                 name = filename;
             }
         }
-        if (author.length() == 0) author = "N/A";
+        if (author.isEmpty()) author = "N/A";
 
         code.append(String.format("{\"id\":\"block\",\"block\":\"func\",\"args\":{\"items\":[{\"item\":{\"id\":\"bl_tag\",\"data\":{\"option\":\"False\",\"tag\":\"Is Hidden\",\"action\":\"dynamic\",\"block\":\"func\"}},\"slot\":26}]},\"data\":\"%s\"},", name));
 
@@ -116,7 +116,6 @@ public class NBSToTemplate {
 
                 chestInited = false;
                 noteCount = 0;
-                finalNote = false;
                 chestCount++;
                 slot = 1;
             }
@@ -133,9 +132,9 @@ public class NBSToTemplate {
             int currentFails = 0;
 
             for (int currentInstID = 1; currentInstID <= customInstrumentCount; currentInstID++) {
-                String currentName = "Custom Instrument";
+                String currentName;
                 currentName = customInstrumentNames[currentInstID - 1];
-                if(currentName == null || currentName.matches("^(\\s+)$") || currentName == ""){
+                if (currentName == null || currentName.matches("^(\\s+)$") || currentName.isEmpty()) {
                     currentFails++;
                     currentName = "<Custom Instrument " + currentFails + ">";
                 }
