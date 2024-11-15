@@ -43,12 +43,12 @@ public class CommandListener implements ClientCommandRegistrationCallback {
 
 
             return 1;
-        }))).then(literal("gui")).executes(ctx -> {
+        }))).then(literal("gui").executes(ctx -> {
             if (Nbs_extensionsClient.MC.player.isCreative()) {
-                Nbs_extensionsClient.MC.setScreen(new NBSScreen());
+                Nbs_extensionsClient.MC.send(() -> Nbs_extensionsClient.MC.setScreen(new NBSScreen()));
             }
             return 1;
-        }));
+        })));
     }
 
 
