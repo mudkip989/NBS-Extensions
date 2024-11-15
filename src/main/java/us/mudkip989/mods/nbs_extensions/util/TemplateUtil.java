@@ -1,12 +1,11 @@
-package us.mudkip989.mods.nbs_extensions.client.util;
+package us.mudkip989.mods.nbs_extensions.util;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import net.minecraft.component.*;
-import net.minecraft.component.type.*;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
-import net.minecraft.item.ItemStack;
+import us.mudkip989.mods.nbs_extensions.NBSExtensions;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -50,7 +49,7 @@ public class TemplateUtil {
             String exported = new String(b64);
             applyRawTemplateNBT(stack, name, author, exported);
         } catch (IOException e) {
-            e.printStackTrace();
+            NBSExtensions.LOGGER.error("Failed to compress template data", e);
         }
 
     }

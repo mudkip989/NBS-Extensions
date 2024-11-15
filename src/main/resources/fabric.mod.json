@@ -11,18 +11,11 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "us.mudkip989.mods.nbs_extensions.client.Nbs_extensionsClient"
-    ],
-    "main": [
-      "us.mudkip989.mods.nbs_extensions.Nbs_extensions"
+      "us.mudkip989.mods.nbs_extensions.NBSExtensions"
     ]
   },
-  "mixins": [
-    "nbs_extensions.mixins.json",
-    {
-      "config": "nbs_extensions.client.mixins.json",
-      "environment": "client"
-    }
+  "client": [
+    "nbs_extensions.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",

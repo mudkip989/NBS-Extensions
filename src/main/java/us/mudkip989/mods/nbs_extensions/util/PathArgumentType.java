@@ -1,4 +1,4 @@
-package us.mudkip989.mods.nbs_extensions.client.util;
+package us.mudkip989.mods.nbs_extensions.util;
 
 import com.mojang.brigadier.LiteralMessage;
 import com.mojang.brigadier.StringReader;
@@ -8,9 +8,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.command.*;
-import net.minecraft.command.suggestion.SuggestionProviders;
-
+import net.minecraft.command.CommandSource;
 
 import java.io.IOException;
 import java.nio.file.Files;

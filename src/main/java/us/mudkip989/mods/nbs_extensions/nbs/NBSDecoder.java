@@ -1,30 +1,34 @@
-package us.mudkip989.mods.nbs_extensions.client.nbs;
+package us.mudkip989.mods.nbs_extensions.nbs;
 
-
-import us.mudkip989.mods.nbs_extensions.client.nbs.exceptions.*;
+import us.mudkip989.mods.nbs_extensions.NBSExtensions;
+import us.mudkip989.mods.nbs_extensions.nbs.exception.OutdatedNBSException;
+import us.mudkip989.mods.nbs_extensions.util.MessageType;
+import us.mudkip989.mods.nbs_extensions.util.MessageUtil;
 
 import java.io.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 // Credit to https://github.com/koca2000/NoteBlockAPI/blob/master/src/main/java/com/xxmicloxx/NoteBlockAPI/NBSDecoder.java
 public class NBSDecoder {
 
-    public static SongData parse(File songFile) throws IOException, OutdatedNBSException {
+    public static SongData parse(File songFile, boolean isCustom) throws IOException, OutdatedNBSException {
         try {
-            return parse(new FileInputStream(songFile), songFile);
+            return parse(new FileInputStream(songFile), songFile, isCustom);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            MessageUtil.send("File not found!", MessageType.ERROR);
+            NBSExtensions.LOGGER.error("File not found: {}", songFile.getAbsolutePath());
         }
         return null;
     }
 
-    private static SongData parse(InputStream inputStream, File songFile) throws IOException, OutdatedNBSException {
-        String title = "";
-        String author = "";
+    private static SongData parse(InputStream inputStream, File songFile, boolean isCustom) throws IOException, OutdatedNBSException {
+        String title;
+        String author;
         String file = songFile.getName();
-        float speed = 0f;
-        float actualSpeed = 0f;
-        short timeSignature = 4;
+        float speed;
+        float actualSpeed;
+        short timeSignature;
         int loopTick = 0;
         int loopCount = 0;
         int vanillaInstruments = 9;
@@ -48,7 +52,7 @@ public class NBSDecoder {
         title = readString(dataInputStream); //title
         author = readString(dataInputStream); //author
         readString(dataInputStream); //original author
-        String description = readString(dataInputStream); //description
+        readString(dataInputStream);//description
         actualSpeed = readShort(dataInputStream); //speed
         speed = actualSpeed / 100f; //speed
         dataInputStream.readBoolean(); //autosave
@@ -115,7 +119,7 @@ public class NBSDecoder {
 
         for (int i = 0; i < layers; i++) { //Read layer data
 
-            String name = readString(dataInputStream);
+            readString(dataInputStream); //layer name
 
             if (nbsversion >= 4) {
                 dataInputStream.readByte();
@@ -140,8 +144,8 @@ public class NBSDecoder {
 
                     double preFinalPanning = (averagePanning - 100) / 50;
 
-                    String finalVelocity = new BigDecimal(averageVelocity).setScale(3, BigDecimal.ROUND_FLOOR).stripTrailingZeros().toPlainString();
-                    String finalPanning = new BigDecimal(preFinalPanning).setScale(3, BigDecimal.ROUND_FLOOR).stripTrailingZeros().toPlainString();
+                    String finalVelocity = new BigDecimal(averageVelocity).setScale(3, RoundingMode.FLOOR).stripTrailingZeros().toPlainString();
+                    String finalPanning = new BigDecimal(preFinalPanning).setScale(3, RoundingMode.FLOOR).stripTrailingZeros().toPlainString();
 
                     String finalString;
                     if (preFinalPanning == 0) {
@@ -153,13 +157,13 @@ public class NBSDecoder {
                 }
             }
 
-            String finalLayerVolume = new BigDecimal(volume).setScale(3, BigDecimal.ROUND_FLOOR).stripTrailingZeros().toPlainString();
-            String finalLayerPanning = new BigDecimal(panning).setScale(3, BigDecimal.ROUND_FLOOR).stripTrailingZeros().toPlainString();
+            String finalLayerVolume = new BigDecimal(volume).setScale(3, RoundingMode.FLOOR).stripTrailingZeros().toPlainString();
+            String finalLayerPanning = new BigDecimal(panning).setScale(3, RoundingMode.FLOOR).stripTrailingZeros().toPlainString();
 
             layerStringBuilder.append("=").append(finalLayerVolume).append(",").append(finalLayerPanning);
         }
 
-        int customInstruments = 0;
+        int customInstruments;
         customInstruments = dataInputStream.readByte();
 
         int[] customPitchList = new int[customInstruments];
@@ -167,8 +171,7 @@ public class NBSDecoder {
 
         if (customInstruments >= 1) {
             for (int i = 0; i < customInstruments; i++) {
-                int instrumentOffset = vanillaInstruments + customInstruments;
-                int instrumentPitch = 0;
+                int instrumentPitch;
 
                 customNameList[i] = readString(dataInputStream); //Instrument name
                 readString(dataInputStream); //Sound file
@@ -177,7 +180,7 @@ public class NBSDecoder {
 
                 customPitchList[i] = instrumentPitch;
 
-                dataInputStream.readByte();    //Press key
+                dataInputStream.readByte(); //Press key
             }
         }
 
@@ -210,10 +213,10 @@ public class NBSDecoder {
                             noteKeyOffset = customPitchList[instrumentId] - 45;
                         }
                         if (firstAppend) {
-                            columnStringBuilder.append(":").append(noteInstrument + 1).append(",").append(getMinecraftPitch(noteKey + (double) noteFinePitch / 100d, noteKeyOffset)).append(laterNoteString);
+                            columnStringBuilder.append(":").append(noteInstrument + 1).append(",").append(getMinecraftPitch(noteKey + (double) noteFinePitch / 100d, noteKeyOffset, isCustom)).append(laterNoteString);
                             firstAppend = false;
                         } else {
-                            columnStringBuilder.append(";").append(noteInstrument + 1).append(",").append(getMinecraftPitch(noteKey + (double) noteFinePitch / 100d, noteKeyOffset)).append(laterNoteString);
+                            columnStringBuilder.append(";").append(noteInstrument + 1).append(",").append(getMinecraftPitch(noteKey + (double) noteFinePitch / 100d, noteKeyOffset, isCustom)).append(laterNoteString);
                         }
                     }
                 }
@@ -252,20 +255,18 @@ public class NBSDecoder {
         return builder.toString();
     }
 
-    private static int getMinecraftPitch(double key, double offset) {
+    private static int getMinecraftPitch(double key, double offset, boolean isCustom) {
 
-        if (key < 33) key -= 9;
-        else if (key > 57) key -= 57;
-        else key -= 33;
+        if (!isCustom) {
+            if (key < 33) key -= 9;
+            else if (key > 57) key -= 57;
+            else key -= 33;
+        }
 
         key += offset;
 
         double finalValue = (0.5 * (Math.pow(2, (key / 12)))) * 1000;
 
-        return (int) finalValue;
-    }
-
-    public SongData parse(InputStream inputStream) throws IOException, OutdatedNBSException {
-        return parse(inputStream, null);
+        return (int) (isCustom ? key * 1000 : finalValue);
     }
 }
