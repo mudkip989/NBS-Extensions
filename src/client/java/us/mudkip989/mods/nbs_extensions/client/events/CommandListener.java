@@ -7,6 +7,7 @@ import net.minecraft.client.*;
 import net.minecraft.client.network.*;
 import net.minecraft.command.*;
 import us.mudkip989.mods.nbs_extensions.client.*;
+import us.mudkip989.mods.nbs_extensions.client.gui.*;
 import us.mudkip989.mods.nbs_extensions.client.sys.*;
 import us.mudkip989.mods.nbs_extensions.client.util.*;
 
@@ -42,7 +43,12 @@ public class CommandListener implements ClientCommandRegistrationCallback {
 
 
             return 1;
-        }))));
+        }))).then(literal("gui")).executes(ctx -> {
+            if (Nbs_extensionsClient.MC.player.isCreative()) {
+                Nbs_extensionsClient.MC.setScreen(new NBSScreen());
+            }
+            return 1;
+        }));
     }
 
 
