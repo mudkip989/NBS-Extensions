@@ -40,12 +40,15 @@ public class NBSScreen extends Screen {
 
         thing2 = new SongListWidget(this.client, this.width, this.height - 80, 40, this.width - 160, 20);
 
-        files.forEach(p -> thing2.add(new TextWidget(Text.of(p.toFile().getName()), NBSExtensions.MC.textRenderer), ButtonWidget.builder(Text.literal("Import"), button -> {
-            if (NBSExtensions.MC.player != null && NBSExtensions.MC.player.isCreative()) {
-                loadNbs(p.toFile(), true);
-            }
+        files.forEach(p -> {
+            thing2.add(new TextWidget(0, 20, Text.of(p.toFile().getName()), NBSExtensions.MC.textRenderer), ButtonWidget.builder(Text.literal("Import"), button -> {
+                if (NBSExtensions.MC.player != null && NBSExtensions.MC.player.isCreative()) {
+                    loadNbs(p.toFile(), true);
+                }
 
-            }).dimensions(20, 20, 100, 20).build()));
+            }).dimensions(20, 20, 40, 20).build());
+
+        });
 
 
 
