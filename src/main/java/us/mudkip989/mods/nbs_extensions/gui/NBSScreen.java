@@ -19,9 +19,13 @@ import static us.mudkip989.mods.nbs_extensions.nbs.NBSLoad.loadNbs;
 
 public class NBSScreen extends Screen {
 
-    public ButtonWidget button1;
-    public ButtonWidget button2;
+    public TextFieldWidget searchBox;
     public SongListWidget thing2;
+    public CheckboxWidget check;
+    private Stream<Path> files;
+    private String search;
+    private boolean custom;
+
 
     public NBSScreen() {
         super(Text.literal("NBS Songs"));
@@ -31,7 +35,7 @@ public class NBSScreen extends Screen {
 
     @Override
     protected void init() {
-        Stream<Path> files;
+        custom = false;
         try {
             files = Files.list(ExternalFile.NBS_FILES.getPath());
         } catch (IOException e) {
@@ -39,11 +43,26 @@ public class NBSScreen extends Screen {
         }
 
         thing2 = new SongListWidget(this.client, this.width, this.height - 80, 40, this.width - 160, 20);
-
-        files.forEach(p -> {
+        check = CheckboxWidget.builder(Text.literal("Use Custom Format"), NBSExtensions.MC.textRenderer).pos(this.width/2, this.height - 30).callback(new CheckboxWidget.Callback() {
+            @Override
+            public void onValueChange(CheckboxWidget checkbox, boolean checked) {
+                custom = checked;
+            }
+        }).build();
+        searchBox = new TextFieldWidget(NBSExtensions.MC.textRenderer, 40, this.height - 30, 100, 20, Text.literal("Search")) {
+            @Override
+            public boolean charTyped(char chr, int modifiers) {
+                search = this.getText();
+                refresh();
+                return super.charTyped(chr, modifiers);
+            }
+        };
+        files.filter(p -> p.toFile().getName().endsWith(".nbs")).forEach(p -> {
             thing2.add(new TextWidget(0, 20, Text.of(p.toFile().getName()), NBSExtensions.MC.textRenderer), ButtonWidget.builder(Text.literal("Import"), button -> {
+
                 if (NBSExtensions.MC.player != null && NBSExtensions.MC.player.isCreative()) {
-                    loadNbs(p.toFile(), true);
+                    loadNbs(p.toFile(), custom);
+
                 }
 
             }).dimensions(20, 20, 40, 20).build());
@@ -51,15 +70,29 @@ public class NBSScreen extends Screen {
         });
 
 
-
-
-//        for (int i = 0; i < 40; i++) {
-//            thing2.add(new TextWidget(Text.literal("Test"), NBSExtensions.MC.textRenderer), ButtonWidget.builder(Text.literal((String.valueOf(random.nextInt(100)))), button -> {
-//                MessageUtil.send("Funny" + String.valueOf(random.nextInt(100)));
-//            }).dimensions(20, 20, 100, 20).build());
-//        }
-
             addDrawableChild(thing2);
+            addDrawableChild(searchBox);
+            addDrawableChild(check);
+    }
+
+    private void refresh() {
+        remove(thing2);
+        try {
+            files = Files.list(ExternalFile.NBS_FILES.getPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        thing2 = new SongListWidget(this.client, this.width, this.height - 80, 40, this.width - 160, 20);
+        files.filter(p -> p.toFile().getName().endsWith(".nbs") && p.toFile().getName().contains(search)).forEach(p -> {
+            thing2.add(new TextWidget(0, 20, Text.of(p.toFile().getName()), NBSExtensions.MC.textRenderer), ButtonWidget.builder(Text.literal("Import"), button -> {
+                if (NBSExtensions.MC.player != null && NBSExtensions.MC.player.isCreative()) {
+                    loadNbs(p.toFile(), custom);
+                }
+
+            }).dimensions(20, 20, 40, 20).build());
+
+        });
+        addDrawableChild(thing2);
     }
 }
 
