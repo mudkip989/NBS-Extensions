@@ -8,13 +8,13 @@ import java.util.*;
 
 public class CacheManager {
 
-    private Path conf;
+    private Path cache;
 
     private HashMap<String, SongCacheData> Cache;
 
     public CacheManager(){
 
-        conf = new ExternalFileBuilder().setName("cache.json").isDirectory(false).build();
+        cache = new ExternalFileBuilder().setName("cache.json").isDirectory(false).build();
 
     }
 

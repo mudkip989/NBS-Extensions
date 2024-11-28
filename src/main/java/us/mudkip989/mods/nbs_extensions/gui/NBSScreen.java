@@ -49,12 +49,21 @@ public class NBSScreen extends Screen {
                 custom = checked;
             }
         }).build();
-        searchBox = new TextFieldWidget(NBSExtensions.MC.textRenderer, 40, this.height - 30, 100, 20, Text.literal("Search")) {
+        searchBox = new TextFieldWidget(NBSExtensions.MC.textRenderer, 40, this.height - 30, 200, 20, Text.literal("Search")) {
             @Override
             public boolean charTyped(char chr, int modifiers) {
+                Boolean test = super.charTyped(chr, modifiers);
                 search = this.getText();
                 refresh();
-                return super.charTyped(chr, modifiers);
+                return test;
+            }
+
+            @Override
+            public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+                Boolean test = super.keyPressed(keyCode, scanCode, modifiers);
+                search = this.getText();
+                refresh();
+                return test;
             }
         };
         files.filter(p -> p.toFile().getName().endsWith(".nbs")).forEach(p -> {
@@ -83,7 +92,7 @@ public class NBSScreen extends Screen {
             throw new RuntimeException(e);
         }
         thing2 = new SongListWidget(this.client, this.width, this.height - 80, 40, this.width - 160, 20);
-        files.filter(p -> p.toFile().getName().endsWith(".nbs") && p.toFile().getName().contains(search)).forEach(p -> {
+        files.filter(p -> p.toFile().getName().endsWith(".nbs") && p.toFile().getName().toLowerCase().contains(search.toLowerCase())).forEach(p -> {
             thing2.add(new TextWidget(0, 20, Text.of(p.toFile().getName()), NBSExtensions.MC.textRenderer), ButtonWidget.builder(Text.literal("Import"), button -> {
                 if (NBSExtensions.MC.player != null && NBSExtensions.MC.player.isCreative()) {
                     loadNbs(p.toFile(), custom);

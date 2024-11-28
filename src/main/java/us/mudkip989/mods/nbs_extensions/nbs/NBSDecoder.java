@@ -37,7 +37,7 @@ public class NBSDecoder {
         StringBuilder layerStringBuilder = new StringBuilder();
 
         DataInputStream dataInputStream = new DataInputStream(inputStream);
-        short length = readShort(dataInputStream);
+        short length = readShort(dataInputStream); // length
         int nbsversion = 0;
         if (length == 0) {
             nbsversion = dataInputStream.readByte();
