@@ -16,7 +16,7 @@ public class MessageUtil {
 
         NBSExtensions.MC.player.sendMessage(
                 Text.literal("» ").styled(s -> s.withColor(messageType.formatting).withBold(true))
-                        .append(Text.literal(message).styled(s -> s.withColor(Formatting.WHITE).withBold(false)))
+                        .append(Text.literal(message).styled(s -> s.withColor(Formatting.WHITE).withBold(false))), true
         );
 
         if (messageType == MessageType.ERROR)
