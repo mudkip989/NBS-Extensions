@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
-import net.minecraft.component.*;
 import net.minecraft.item.*;
 import net.minecraft.text.*;
 import us.mudkip989.mods.nbs_extensions.NBSExtensions;
