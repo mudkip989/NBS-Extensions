@@ -15,7 +15,11 @@ public class TemplateUtil {
     public static final int VERSION = 1;
 
     public static void applyRawTemplateNBT(ItemStack stack, String name, String author, String codeData) {
-        applyRawTemplateNBT(stack, Text.literal(name), author, codeData, VERSION);
+        applyRawTemplateNBT(stack, Text.literal(name).styled(u -> u.withItalic(false)), author, codeData, VERSION);
+    }
+
+    public static void applyRawTemplateNBT(ItemStack stack, Text name, String author, String codeData) {
+        applyRawTemplateNBT(stack, name, author, codeData, VERSION);
     }
 
     public static void applyRawTemplateNBT(ItemStack stack, Text name, String author, String codeData, int version) {
