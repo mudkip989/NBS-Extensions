@@ -42,7 +42,6 @@ public class NBSToTemplate {
         StringBuilder currentNotes = new StringBuilder();
         StringBuilder code = new StringBuilder();
         StringBuilder currentBlock = new StringBuilder();
-        StringBuilder instList = new StringBuilder();
 
         String songTempo = new BigDecimal(this.speed).stripTrailingZeros().toPlainString();
         if (name.isEmpty()) {
@@ -54,7 +53,7 @@ public class NBSToTemplate {
         }
         if (author.isEmpty()) author = "N/A";
 
-        code.append(String.format("{\"id\":\"block\",\"block\":\"func\",\"args\":{\"items\":[{\"item\":{\"id\":\"bl_tag\",\"data\":{\"option\":\"False\",\"tag\":\"Is Hidden\",\"action\":\"dynamic\",\"block\":\"func\"}},\"slot\":26}]},\"data\":\"%s\"},", name));
+        code.append("{\"id\":\"block\",\"block\":\"func\",\"args\":{\"items\":[{\"item\":{\"id\":\"bl_tag\",\"data\":{\"option\":\"False\",\"tag\":\"Is Hidden\",\"action\":\"dynamic\",\"block\":\"func\"}},\"slot\":26}]},\"data\":\"").append(name).append("\"},");
 
         int slot = 1;
         int chestCount = 1;
@@ -85,7 +84,7 @@ public class NBSToTemplate {
                 noteCount++;
                 if (currentNotes.length() > 1930) {
                     currentNotes = new StringBuilder(revertString);
-                    currentBlock.append(String.format(",{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"%s\"}},\"slot\":%d}", currentNotes, slot));
+                    currentBlock.append(",{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"").append(currentNotes).append("\"}},\"slot\":").append(slot).append("}");
                     currentNotes.setLength(0);
                     noteCount = 0;
                     finalNote = true;
@@ -95,7 +94,7 @@ public class NBSToTemplate {
 
                 if (i >= songData.length - 1) {
                     if (!finalNote) {
-                        currentBlock.append(String.format(",{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"%s\"}},\"slot\":%d}", currentNotes, slot));
+                        currentBlock.append(",{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"").append(currentNotes).append("\"}},\"slot\":").append(slot).append("}");
                         currentNotes.setLength(0);
                     }
                     closeChest = true;
@@ -109,7 +108,7 @@ public class NBSToTemplate {
                 } else {
                     varActionType = "AppendValue";
                 }
-                currentBlock.append(String.format("]},\"action\":\"%s\"},", varActionType));
+                currentBlock.append("]},\"action\":\"").append(varActionType).append("\"},");
                 code.append(currentBlock);
                 currentBlock.setLength(0);
                 currentNotes.setLength(0);
@@ -120,7 +119,7 @@ public class NBSToTemplate {
                 slot = 1;
             }
         }
-        //CreateList: instrumentNames
+        // CreateList: instrumentNames
         if (customInstrumentCount == 0) {
             code.append("{\"id\":\"block\",\"block\":\"set_var\",\"args\":{\"items\":[{\"item\":{\"id\":\"var\",\"data\":{\"name\":\"instrumentNames\",\"scope\":\"local\"}},\"slot\":0},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Harp\"}},\"slot\":1},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Bass\"}},\"slot\":2},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Bass Drum\"}},\"slot\":3},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Snare Drum\"}},\"slot\":4},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Click\"}},\"slot\":5},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Guitar\"}},\"slot\":6},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Flute\"}},\"slot\":7},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Bell\"}},\"slot\":8},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Chime\"}},\"slot\":9},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Xylophone\"}},\"slot\":10},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Iron Xylophone\"}},\"slot\":11},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Cow Bell\"}},\"slot\":12},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Didgeridoo\"}},\"slot\":13},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Bit\"}},\"slot\":14},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Banjo\"}},\"slot\":15},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"Pling\"}},\"slot\":16}]},\"action\":\"CreateList\"},");
         } else {
@@ -159,8 +158,8 @@ public class NBSToTemplate {
             code.append(instList);
         }
 
-        //CreateList: songData
-        code.append(String.format("{\"id\":\"block\",\"block\":\"set_var\",\"args\":{\"items\":[{\"item\":{\"id\":\"var\",\"data\":{\"name\":\"songData\",\"scope\":\"local\"}},\"slot\":0},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"%s\"}},\"slot\":1},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"%s\"}},\"slot\":2},{\"item\":{\"id\":\"num\",\"data\":{\"name\":\"%s\"}},\"slot\":3}, {\"item\":{\"id\":\"num\",\"data\":{\"name\":\"%d\"}},\"slot\":4}, {\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"%s\"}},\"slot\":5}, {\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"%s\"}},\"slot\":6},{\"item\":{\"id\":\"num\",\"data\":{\"name\":\"%d\"}},\"slot\":7},{\"item\":{\"id\":\"num\",\"data\":{\"name\":\"%d\"}},\"slot\":8}]},\"action\":\"CreateList\"}", name, author, songTempo, length, layers, version, loopTick, loopCount));
+        // CreateList: songData
+        code.append("{\"id\":\"block\",\"block\":\"set_var\",\"args\":{\"items\":[{\"item\":{\"id\":\"var\",\"data\":{\"name\":\"songData\",\"scope\":\"local\"}},\"slot\":0},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"").append(name).append("\"}},\"slot\":1},{\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"").append(author).append("\"}},\"slot\":2},{\"item\":{\"id\":\"num\",\"data\":{\"name\":\"").append(songTempo).append("\"}},\"slot\":3}, {\"item\":{\"id\":\"num\",\"data\":{\"name\":\"").append(length).append("\"}},\"slot\":4}, {\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"").append(layers).append("\"}},\"slot\":5}, {\"item\":{\"id\":\"txt\",\"data\":{\"name\":\"").append(version).append("\"}},\"slot\":6},{\"item\":{\"id\":\"num\",\"data\":{\"name\":\"").append(loopTick).append("\"}},\"slot\":7},{\"item\":{\"id\":\"num\",\"data\":{\"name\":\"").append(loopCount).append("\"}},\"slot\":8}]},\"action\":\"CreateList\"}");
 
         return "{\"blocks\": [" + code + "]}";
     }
