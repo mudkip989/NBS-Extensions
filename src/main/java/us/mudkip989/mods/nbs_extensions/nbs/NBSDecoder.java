@@ -48,26 +48,26 @@ public class NBSDecoder {
                 throw new OutdatedNBSException();
             }
         }
-        short layers = readShort(dataInputStream); //song height
-        title = readString(dataInputStream); //title
-        author = readString(dataInputStream); //author
-        readString(dataInputStream); //original author
-        readString(dataInputStream);//description
-        actualSpeed = readShort(dataInputStream); //speed
-        speed = actualSpeed / 100f; //speed
-        dataInputStream.readBoolean(); //autosave
-        dataInputStream.readByte(); //autosave duration
-        timeSignature = dataInputStream.readByte(); //time signature
-        readInt(dataInputStream); //minutes spent
-        readInt(dataInputStream); //left clicks
-        readInt(dataInputStream); //right clicks
-        readInt(dataInputStream); //blocks added
-        readInt(dataInputStream); //nlocks removed
+        short layers = readShort(dataInputStream); // song height
+        title = readString(dataInputStream); // title
+        author = readString(dataInputStream); // author
+        readString(dataInputStream); // original author
+        readString(dataInputStream);// description
+        actualSpeed = readShort(dataInputStream); // speed
+        speed = actualSpeed / 100f; // speed
+        dataInputStream.readBoolean(); // autosave
+        dataInputStream.readByte(); // autosave duration
+        timeSignature = dataInputStream.readByte(); // time signature
+        readInt(dataInputStream); // minutes spent
+        readInt(dataInputStream); // left clicks
+        readInt(dataInputStream); // right clicks
+        readInt(dataInputStream); // blocks added
+        readInt(dataInputStream); // nlocks removed
         readString(dataInputStream); // mid or schematic filename
         if (nbsversion >= 4) {
-            dataInputStream.readByte(); //loop on/off
-            loopCount = dataInputStream.readByte(); //loop count
-            loopTick = readShort(dataInputStream); //loop start tick
+            dataInputStream.readByte(); // loop on/off
+            loopCount = dataInputStream.readByte(); // loop count
+            loopTick = readShort(dataInputStream); // loop start tick
         }
 
         short tick = -1;
@@ -81,7 +81,7 @@ public class NBSDecoder {
         boolean[][] noteExistence = new boolean[layers][length + 1];
         boolean firstNoted = false;
 
-        while (true) { //Read notes
+        while (true) { // Read notes
             short t = readShort(dataInputStream);
             if (t == 0) {
                 break;
@@ -117,9 +117,9 @@ public class NBSDecoder {
             }
         }
 
-        for (int i = 0; i < layers; i++) { //Read layer data
+        for (int i = 0; i < layers; i++) { // Read layer data
 
-            readString(dataInputStream); //layer name
+            readString(dataInputStream); // layer name
 
             if (nbsversion >= 4) {
                 dataInputStream.readByte();
@@ -173,14 +173,14 @@ public class NBSDecoder {
             for (int i = 0; i < customInstruments; i++) {
                 int instrumentPitch;
 
-                customNameList[i] = readString(dataInputStream); //Instrument name
-                readString(dataInputStream); //Sound file
+                customNameList[i] = readString(dataInputStream); // Instrument name
+                readString(dataInputStream); // Sound file
 
-                instrumentPitch = dataInputStream.readByte(); //Sound pitch
+                instrumentPitch = dataInputStream.readByte(); // Sound pitch
 
                 customPitchList[i] = instrumentPitch;
 
-                dataInputStream.readByte(); //Press key
+                dataInputStream.readByte(); // Press key
             }
         }
 

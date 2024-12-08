@@ -27,17 +27,16 @@ public class NBSLoad {
             ItemStack stack = new ItemStack(Items.NOTE_BLOCK);
             TemplateUtil.compressTemplateNBT(stack, d.name(), d.author(), code);
 
-            if (d.name().isEmpty()) {
-                String name;
+
+            String name = d.name();
+            if (name.isEmpty()) {
                 if (d.fileName().indexOf(".") > 0) {
                     name = d.fileName().substring(0, d.fileName().lastIndexOf("."));
                 } else {
                     name = d.fileName();
                 }
-                stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal("§5SONG§7 -§f " + name));
-            } else {
-                stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal("§5SONG§7 -§f " + d.name()));
             }
+            stack.set(DataComponentTypes.CUSTOM_NAME, Text.literal("§5SONG§7 -§f " + name));
 
             MessageUtil.send("NBS Loaded!", MessageType.SUCCESS);
             ItemUtil.giveCreativeItem(stack, true);
