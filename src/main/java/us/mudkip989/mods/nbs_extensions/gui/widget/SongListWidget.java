@@ -20,7 +20,7 @@ public class SongListWidget extends ElementListWidget<SongListWidget.Entry> {
         this.rowHeight = rowHeight;
     }
 
-    public void add(ClickableWidget ... widgets) {
+    public void add(ClickableWidget... widgets) {
         if (widgets.length == 0) return;
 
         var grid = new GridWidget();
@@ -36,8 +36,6 @@ public class SongListWidget extends ElementListWidget<SongListWidget.Entry> {
             } else {
                 count++;
             }
-
-
         }
 
         for (var widget : widgets) {
