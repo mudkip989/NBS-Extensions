@@ -1,16 +1,28 @@
 package us.mudkip989.mods.nbs_extensions.gui;
 
-import net.minecraft.client.gui.screen.*;
-import net.minecraft.client.gui.widget.*;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ConfirmScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.CheckboxWidget;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
-import us.mudkip989.mods.nbs_extensions.*;
-import us.mudkip989.mods.nbs_extensions.gui.widget.*;
-import us.mudkip989.mods.nbs_extensions.sys.*;
+import org.apache.commons.lang3.mutable.MutableBoolean;
+import us.mudkip989.mods.nbs_extensions.NBSExtensions;
+import us.mudkip989.mods.nbs_extensions.gui.widget.SongListWidget;
+import us.mudkip989.mods.nbs_extensions.sys.ExternalFile;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.stream.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static us.mudkip989.mods.nbs_extensions.nbs.NBSLoad.loadNbs;
 
@@ -21,7 +33,7 @@ public class NBSScreen extends Screen {
     public CheckboxWidget customFormat;
 
     private Stream<Path> files;
-    private String search;
+    private String search = "";
     private boolean custom;
 
     public NBSScreen() {
@@ -48,7 +60,7 @@ public class NBSScreen extends Screen {
             @Override
             public boolean charTyped(char chr, int modifiers) {
                 boolean test = super.charTyped(chr, modifiers);
-                search = this.getText();
+                search = this.getText() == null ? "" : this.getText();
                 refresh();
                 return test;
             }
@@ -56,7 +68,7 @@ public class NBSScreen extends Screen {
             @Override
             public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
                 boolean test = super.keyPressed(keyCode, scanCode, modifiers);
-                search = this.getText();
+                search = this.getText() == null ? "" : this.getText();
                 refresh();
                 return test;
             }
@@ -98,6 +110,56 @@ public class NBSScreen extends Screen {
 
         });
         addDrawableChild(songList);
+    }
+
+    private static Stream<String> streamFileNames(Collection<Path> paths) {
+        return paths.stream().map(Path::getFileName).map(Path::toString);
+    }
+
+    protected static void copySongs(MinecraftClient client, List<Path> srcPaths, Path destPath) {
+        MutableBoolean mutableBoolean = new MutableBoolean();
+        srcPaths.forEach((src) -> {
+            try (Stream<Path> stream = Files.walk(src)) {
+                stream.forEach((toCopy) -> {
+                    try {
+                        Util.relativeCopy(src.getParent(), destPath, toCopy);
+                    } catch (IOException iOException) {
+                        NBSExtensions.LOGGER.warn("Failed to copy nbs file from {} to {}", toCopy, destPath, iOException);
+                        mutableBoolean.setTrue();
+                    }
+                });
+            } catch (IOException var8) {
+                NBSExtensions.LOGGER.warn("Failed to copy nbs file from {} to {}", src, destPath);
+                mutableBoolean.setTrue();
+            }
+        });
+        if (mutableBoolean.isTrue()) {
+            SystemToast.add(client.getToastManager(), SystemToast.Type.PACK_COPY_FAILURE, Text.literal("Failed to copy songs"), Text.literal(destPath.toString()));
+        }
+
+    }
+
+    @Override
+    public void filesDragged(List<Path> paths) {
+        if (this.client == null) return;
+        String string = streamFileNames(paths).collect(Collectors.joining(", "));
+        this.client.setScreen(new ConfirmScreen((confirmed) -> {
+            if (confirmed) {
+                ArrayList<Path> nbsFiles = new ArrayList<>();
+                for (Path path : paths) {
+                    if (path.toString().endsWith(".nbs")) {
+                        nbsFiles.add(path);
+                    }
+                }
+
+                if (!nbsFiles.isEmpty()) {
+                    copySongs(this.client, nbsFiles, ExternalFile.NBS_FILES.getPath());
+                    this.refresh();
+                }
+            }
+
+            this.client.setScreen(this);
+        }, Text.literal("Do you want to add the following song(s)?"), Text.literal(string)));
     }
 }
 
