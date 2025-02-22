@@ -3,6 +3,7 @@ package us.mudkip989.mods.nbs_extensions.event;
 import com.mojang.brigadier.CommandDispatcher;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.sound.*;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.item.*;
 import net.minecraft.text.*;
@@ -55,6 +56,11 @@ public class CommandListener implements ClientCommandRegistrationCallback {
                         ItemUtil.giveCreativeItem(item, true);
                         MessageUtil.send("You received the §dMusic Player§b! Place it down in your codespace and open the chest to get functions!", MessageType.SUCCESS);
                     }
+                    return 1;
+                }))
+                .then(literal("dummy").executes(ctx -> {
+
+                    MessageUtil.send("This was used for testing. Come back later for other tests.");
                     return 1;
                 })));
     }

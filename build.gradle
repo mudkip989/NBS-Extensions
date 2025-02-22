@@ -25,6 +25,9 @@ dependencies {
 
     // DevAuth.
     modRuntimeOnly("me.djtheredstoner:DevAuth-fabric:1.2.1")
+
+    implementation 'net.bramp.ffmpeg:ffmpeg:0.8.0'
+
 }
 
 processResources {
