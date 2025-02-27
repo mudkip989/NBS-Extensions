@@ -4,7 +4,7 @@ import net.minecraft.client.*;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.widget.*;
-import org.w3c.dom.*;
+
 
 import java.util.*;
 
@@ -48,7 +48,7 @@ public class SongListWidget extends ElementListWidget<SongListWidget.Entry> {
 
         grid.refreshPositions();
 
-        this.addEntry(new Entry(grid));
+        this.addEntry(new us.mudkip989.mods.nbs_extensions.gui.widget.SongListWidget.Entry(grid));
     }
 
 
@@ -67,7 +67,7 @@ public class SongListWidget extends ElementListWidget<SongListWidget.Entry> {
     }
 
 
-    public static class Entry extends ElementListWidget.Entry<Entry> {
+    public static class Entry extends ElementListWidget.Entry<us.mudkip989.mods.nbs_extensions.gui.widget.SongListWidget.Entry> {
         private final GridWidget widget;
         private final List<ClickableWidget> children = new ArrayList<>();
 
