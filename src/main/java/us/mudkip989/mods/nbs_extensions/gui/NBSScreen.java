@@ -146,6 +146,7 @@ public class NBSScreen extends Screen {
 
     }
 
+
     @Override
     public void onFilesDropped(List<Path> paths) {
         if (this.client == null) return;
