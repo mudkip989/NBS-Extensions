@@ -16,8 +16,7 @@ import us.mudkip989.mods.nbs_extensions.gui.widget.SongListWidget;
 import us.mudkip989.mods.nbs_extensions.sys.ExternalFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,10 +43,12 @@ public class NBSScreen extends Screen {
     protected void init() {
         custom = false;
         try {
-            files = Files.list(ExternalFile.NBS_FILES.getPath());
+            //files = Files.list(ExternalFile.NBS_FILES.getPath());
+            files = Files.walk(ExternalFile.NBS_FILES.getPath(), 5);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
 
         songList = new SongListWidget(this.client, this.width, this.height - 80, 40, this.width - 160, 20);
         customFormat = CheckboxWidget.builder(Text.literal("Use Custom Format"), NBSExtensions.MC.textRenderer).pos(this.width/2 + 5, this.height - 28).callback(new CheckboxWidget.Callback() {
@@ -95,7 +96,8 @@ public class NBSScreen extends Screen {
     private void refresh() {
         remove(songList);
         try {
-            files = Files.list(ExternalFile.NBS_FILES.getPath());
+            //files = Files.list(ExternalFile.NBS_FILES.getPath());
+            files = Files.walk(ExternalFile.NBS_FILES.getPath(), 5);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -110,6 +112,11 @@ public class NBSScreen extends Screen {
 
         });
         addDrawableChild(songList);
+    }
+
+    private Stream<Path> RecursiveFileList(){
+
+        return null;
     }
 
     private static Stream<String> streamFileNames(Collection<Path> paths) {
