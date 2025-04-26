@@ -148,7 +148,7 @@ public class NBSScreen extends Screen {
 
 
     @Override
-    public void onFilesDropped(List<Path> paths) {
+    public void filesDragged(List<Path> paths) {
         if (this.client == null) return;
         String string = streamFileNames(paths).collect(Collectors.joining(", "));
         this.client.setScreen(new ConfirmScreen((confirmed) -> {
