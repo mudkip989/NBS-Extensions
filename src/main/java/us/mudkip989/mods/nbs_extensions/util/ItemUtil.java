@@ -10,12 +10,12 @@ public class ItemUtil {
     public static void giveCreativeItem(ItemStack item, boolean preferHand) {
         MinecraftClient mc = NBSExtensions.MC;
         if (mc.player == null || mc.interactionManager == null) return;
-        DefaultedList<ItemStack> inv = mc.player.getInventory().main;
+        DefaultedList<ItemStack> inv = mc.player.getInventory().getMainStacks();
 
 
         if (preferHand) {
             if (mc.player.getMainHandStack().isEmpty()) {
-                mc.interactionManager.clickCreativeStack(item, mc.player.getInventory().selectedSlot + 36);
+                mc.interactionManager.clickCreativeStack(item, mc.player.getInventory().getSelectedSlot() + 36);
                 return;
             }
         }
