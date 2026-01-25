@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.input.*;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
@@ -58,17 +59,20 @@ public class NBSScreen extends Screen {
             }
         }).build();
         searchBox = new TextFieldWidget(NBSExtensions.MC.textRenderer, width / 2 - 100, 10, 200, 20, Text.literal("Search")) {
+
             @Override
-            public boolean charTyped(char chr, int modifiers) {
-                boolean test = super.charTyped(chr, modifiers);
+            public boolean charTyped(CharInput input) {
+                boolean test = super.charTyped(input);
                 search = this.getText() == null ? "" : this.getText();
                 refresh();
                 return test;
             }
 
+
+
             @Override
-            public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-                boolean test = super.keyPressed(keyCode, scanCode, modifiers);
+            public boolean keyPressed(KeyInput input) {
+                boolean test = super.keyPressed(input);
                 search = this.getText() == null ? "" : this.getText();
                 refresh();
                 return test;

@@ -67,6 +67,7 @@ public class SongListWidget extends ElementListWidget<SongListWidget.Entry> {
     }
 
 
+
     public static class Entry extends ElementListWidget.Entry<us.mudkip989.mods.nbs_extensions.gui.widget.SongListWidget.Entry> {
         private final GridWidget widget;
         private final List<ClickableWidget> children = new ArrayList<>();
@@ -87,11 +88,17 @@ public class SongListWidget extends ElementListWidget<SongListWidget.Entry> {
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            this.widget.setPosition(x - 3, y);
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+//            this.widget.setPosition(x - 3, y);
+            this.widget.setPosition(getContentX() - 3, getContentY());
+
             this.widget.refreshPositions();
+
 
             this.widget.forEachChild(c -> c.render(context, mouseX, mouseY, tickDelta));
         }
+
+
+
     }
 }

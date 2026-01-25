@@ -3,6 +3,7 @@ package us.mudkip989.mods.nbs_extensions.util;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.network.packet.c2s.play.*;
 import net.minecraft.util.collection.DefaultedList;
 import us.mudkip989.mods.nbs_extensions.NBSExtensions;
 
@@ -15,7 +16,9 @@ public class ItemUtil {
 
         if (preferHand) {
             if (mc.player.getMainHandStack().isEmpty()) {
-                mc.interactionManager.clickCreativeStack(item, mc.player.getInventory().getSelectedSlot() + 36);
+//                mc.interactionManager.clickCreativeStack(item, mc.player.getInventory().getSelectedSlot());
+                mc.player.getInventory().setStack(mc.player.getInventory().getSelectedSlot(), item);
+                mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(mc.player.getInventory().getSelectedSlot()));
                 return;
             }
         }
@@ -31,9 +34,13 @@ public class ItemUtil {
                 }
             } else {
                 if (i.getItem() == Items.AIR) {
-                    if (index < 9)
-                        mc.interactionManager.clickCreativeStack(item, index + 36);
+                    if (index < 9) {
+//                        mc.interactionManager.clickCreativeStack(item, index);
+                        mc.player.getInventory().setStack(index, item);
+                        mc.getNetworkHandler().sendPacket(new UpdateSelectedSlotC2SPacket(index));
+                    }
                     inv.set(index, item);
+
                     return;
                 }
             }
